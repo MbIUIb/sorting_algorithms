@@ -21,6 +21,5 @@ for sort_data in sortes_data:
     plt.plot(*sort_data)
 
 plt.legend(names)
-plt.show()
 plt.savefig('graphics/all.png')
 plt.close()
