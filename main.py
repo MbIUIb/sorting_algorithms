@@ -1,6 +1,8 @@
 import resource, sys
+
 resource.setrlimit(resource.RLIMIT_STACK, (2**29,-1))
 sys.setrecursionlimit(10**6)
+
 
 def buble_sort(data:list):
     """Сортировка пузырьком"""
@@ -80,71 +82,28 @@ def comb_sort(data:list):
 
 
 def write(d, num):
-    alg = ('', 'buble_sort', 'shaker_sort', 'selection_sort', 'insertion_sort', 'quick_sort', 'comb_sort')
-    for i in range(1, 6+1):
-        with open(f'res\\{alg[i]}.txt', 'a') as txt:
-            txt.write(f'{num}: {str(d[i][1][-1])} \n')
+    names = 'buble_sort', 'shaker_sort', 'selection_sort', 'insertion_sort', 'quick_sort', 'comb_sort'
+    for idx, sort_data in d.items():
+        with open(f'logs/{names[idx]}', 'a') as txt:
+            txt.write(f'{num}: {sort_data[1][-1]}')
 
 
 from random import randint
 from time import time
-import numpy as np
-from matplotlib import pyplot as plt
 
-dict1 = {1: [[], []],
-         2: [[], []],
-         3: [[], []],
-         4: [[], []],
-         5: [[], []],
-         6: [[], []]}
+sorts = buble_sort, shaker_sort, selection_sort, insertion_sort, quick_sort, comb_sort
+d = {i: ([], []) for i in range(len(sorts))}
 
-for num_of_elem in range(800000000, 800000000+1):
-    data = [randint(1, 999999) for i in range(num_of_elem)]
-    # a = data.copy()
-    # b = data.copy()
-    # c = data.copy()
-    # d = data.copy()
-    # e = data.copy()
-    # f = data.copy()
-    print(num_of_elem)
-    for num_of_alg in range(5, 5+1):
+for num_of_elem in range(10, 100, 1):
+    data = [randint(1, 99999) for _ in range(num_of_elem)]
+
+    for idx, sort in enumerate(sorts):
+        args = (data[:], ) if sort != quick_sort else (data[:], 0, len(data))
+
         start = time()
-        match num_of_alg:
-            case 1:
-                buble_sort(a)
-            case 2:
-                shaker_sort(b)
-            case 3:
-                selection_sort(c)
-            case 4:
-                insertion_sort(d)
-            case 5:
-                quick_sort(data, 0, len(data))
-            case 6:
-                comb_sort(f)
-        stop = time()
-        t = stop - start
+        sort(*args)
+        t = time() - start
 
-        dict1[num_of_alg][0].append(num_of_elem)
-        dict1[num_of_alg][1].append(t)
-    # print(dict1)
-
-    write(dict1, num_of_elem)
-
-    # if num_of_elem % 10000 == 0:
-        # plt.plot(dict1[1][0], dict1[1][1])
-        # plt.plot(dict1[2][0], dict1[2][1])
-        # plt.plot(dict1[3][0], dict1[3][1])
-        # plt.plot(dict1[4][0], dict1[4][1])
-        # plt.plot(dict1[5][0], dict1[5][1])
-        # plt.plot(dict1[6][0], dict1[6][1])
-
-        # plt.legend(('buble_sort', 'shaker_sort', 'selection_sort', 'insertion_sort', 'quick_sort', 'comb_sort'))
-        # plt.savefig(f'res\\all_sort{num_of_elem}.png')
-        # plt.close()
-
-        # plt.plot(dict1[5][0], dict1[5][1])
-        # plt.plot(dict1[6][0], dict1[6][1])
-        # plt.legend(('quick_sort', 'comb_sort'))
-        # plt.savefig(f'res\\2_sort{num_of_elem}.png')
-        # plt.close()
+        d[idx][0].append(num_of_elem)
+        d[idx][1].append(t)
+    write(d, num_of_elem)
