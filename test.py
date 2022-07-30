@@ -1,6 +1,9 @@
 import resource, sys
+
 resource.setrlimit(resource.RLIMIT_STACK, (2**29,-1))
 sys.setrecursionlimit(10**6)
+
+
 def quick_sort(data:list, start, end):
     """Быстрая сортировка"""
     if end - start > 1:
@@ -39,6 +42,7 @@ def comb_sort(data:list):
 
 from random import randint
 import time
+
 elem = 100000000
 data = [randint(1, 9999999) for i in range(elem)]
 start = time.time()
